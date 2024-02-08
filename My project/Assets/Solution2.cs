@@ -62,6 +62,14 @@ public class Solution2 : MonoBehaviour
     {
         //Find the con modifier based on the initial score
         Debug.Log((conScore - 10) / 2);
+        switch (conScore)
+        {
+            case 9: return -1;
+            case 7: return -2;
+            case 5: return -3;
+            case 3: return -4;
+            case 1: return -5;
+        }
         return (conScore-10)/2;
     }
 

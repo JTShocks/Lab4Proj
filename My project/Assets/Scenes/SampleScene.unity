@@ -235,7 +235,7 @@ MonoBehaviour:
   characterName: Grog
   characterClass: barbarian
   characterLevel: 2
-  characterConScore: 18
+  characterConScore: 7
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,4 +254,4 @@ MonoBehaviour:
   characterName: Grod
   characterClass: barbarian
   characterLevel: 2
-  characterConScore: 18
+  characterConScore: 9
