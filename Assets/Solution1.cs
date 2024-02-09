@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Solution2 : MonoBehaviour
+public class Solution1 : MonoBehaviour
 {
     //Input variables
     public bool isHillDwarf, hasToughFeat, isRollingHealth;
@@ -11,27 +11,6 @@ public class Solution2 : MonoBehaviour
 
     int playerTotalHealth;
     int dwarfMod = 0, toughMod = 0;
-
-    public class CharacterData
-    {
-        public string name;
-        public int level;
-        public int health;
-        public string characterClass;
-        public int conMod;
-        public CharacterData(string name, int level, int health, string characterClass)
-        {
-            this.name = name;
-            this.level = level;
-            this.health = health;
-            this.characterClass = characterClass;
-        }
-
-
-
-    };
-
-    CharacterData newCharacter;
 
 
     public Dictionary<string, int> classDieSizes = new Dictionary<string, int>
@@ -43,8 +22,6 @@ public class Solution2 : MonoBehaviour
 
     private void Start()
     {
-        newCharacter = new CharacterData(characterName, characterLevel, playerTotalHealth, characterClass);
-
         if (isHillDwarf)
         {
             dwarfMod = 1;
@@ -54,14 +31,12 @@ public class Solution2 : MonoBehaviour
             toughMod = 1;
         }
 
-        CalculatePlayerHealth(newCharacter);
-        Debug.LogFormat("Character Name: {0}, Character Class {1} \n Character Level: {2}, Character ConMod {3} \n Character Health: {4}", newCharacter.name, newCharacter.characterClass, newCharacter.level, newCharacter.conMod, newCharacter.health);
+        CalculatePlayerHealth();
     }
 
     int CalculateConMod(int conScore)
     {
         //Find the con modifier based on the initial score
-        Debug.Log((conScore - 10) / 2);
         switch (conScore)
         {
             case 9: return -1;
@@ -70,7 +45,7 @@ public class Solution2 : MonoBehaviour
             case 3: return -4;
             case 1: return -5;
         }
-        return (conScore-10)/2;
+        return (conScore - 10) / 2;
     }
 
     int RollHealthDice(string playerClass)
@@ -80,31 +55,30 @@ public class Solution2 : MonoBehaviour
         return healthFromDieRoll;
     }
 
-    void CalculatePlayerHealth(CharacterData newCharacter)
+    void CalculatePlayerHealth()
     {
         int healthFromDieRoll = 0;
-        newCharacter.conMod = CalculateConMod(characterConScore);
 
         for(int i = 1; i <= characterLevel; i++)
         {
 
             if (isRollingHealth)
             {
-                healthFromDieRoll = RollHealthDice(newCharacter.characterClass); //Generate a random roll
+                healthFromDieRoll = RollHealthDice(characterClass); //Generate a random roll
             }
             else
             {
-                healthFromDieRoll = (1 + classDieSizes[newCharacter.characterClass]) / 2; //Take the average of the die size
+                healthFromDieRoll = ((1 + classDieSizes[characterClass]) / 2)+1; //Take the average of the die size
             }
 
             if (i == 1) //On the first iteration, add the starting level amount (dieSize + conMod)
             {
-                newCharacter.health += classDieSizes[newCharacter.characterClass] + newCharacter.conMod + dwarfMod + toughMod;
+                playerTotalHealth += classDieSizes[characterClass] + CalculateConMod(characterConScore) + dwarfMod + toughMod;
             }
             else{
-                newCharacter.health += healthFromDieRoll + newCharacter.conMod + dwarfMod + toughMod;
+                playerTotalHealth += healthFromDieRoll + CalculateConMod(characterConScore) + dwarfMod + toughMod;
             }
-            Debug.LogFormat("Player health at level {0} is {1}", i, newCharacter.health);
+            Debug.LogFormat("Player health at level {0} is {1}", i, playerTotalHealth);
 
         }
 
